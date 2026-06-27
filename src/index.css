@@ -565,3 +565,81 @@ body {
 .w-full { width: 100%; }
 .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
 .text-center { text-align: center; }
+
+/* Bottom nav (mobile only) */
+.bottom-nav { display: none; }
+.mobile-topbar { display: none; }
+
+@media (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main {
+    margin-left: 0;
+    padding: 16px;
+    padding-top: 70px;
+    padding-bottom: 80px;
+  }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 58px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    z-index: 100;
+  }
+
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 64px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s;
+  }
+
+  .bottom-nav-item.active { color: var(--primary); }
+  .bottom-nav-emoji { font-size: 22px; }
+  .bottom-nav-label { font-size: 10px; font-weight: 600; }
+
+  .activity-item { flex-wrap: wrap; }
+  .activity-stats { width: 100%; justify-content: flex-start; }
+
+  .modal {
+    padding: 24px 16px;
+    border-radius: 20px 20px 0 0;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-overlay { align-items: flex-end; padding: 0; }
+  .page-title { font-size: 22px; }
+  .stat-value { font-size: 22px; }
+}

@@ -9,7 +9,7 @@ import './index.css';
 const NAV = [
   { id: 'dashboard', label: 'Dashboard', emoji: '📊' },
   { id: 'activities', label: 'Activities', emoji: '🏃' },
-  { id: 'bmi', label: 'BMI & Health', emoji: '⚖️' },
+  { id: 'bmi', label: 'BMI', emoji: '⚖️' },
   { id: 'profile', label: 'Profile', emoji: '👤' },
 ];
 
@@ -21,6 +21,7 @@ export default function App() {
 
   return (
     <div className="app">
+      {/* Sidebar — visible on desktop */}
       <nav className="sidebar">
         <div className="sidebar-logo">
           <h2>💪 FitTrack</h2>
@@ -34,24 +35,17 @@ export default function App() {
             onClick={() => setPage(n.id)}
           >
             <span style={{ fontSize: 18 }}>{n.emoji}</span>
-            {n.label}
+            {n.label === 'BMI' ? 'BMI & Health' : n.label}
           </div>
         ))}
 
         <div style={{ marginTop: 'auto', padding: '20px', borderTop: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{
-              width: 36,
-              height: 36,
-              borderRadius: '50%',
+              width: 36, height: 36, borderRadius: '50%',
               background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 13,
-              fontWeight: 700,
-              color: 'white',
-              flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 13, fontWeight: 700, color: 'white', flexShrink: 0,
             }}>{initials}</div>
             <div style={{ overflow: 'hidden' }}>
               <div style={{ fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -65,7 +59,20 @@ export default function App() {
         </div>
       </nav>
 
+      {/* Main content */}
       <main className="main">
+        {/* Mobile top bar */}
+        <div className="mobile-topbar">
+          <span style={{ fontSize: 20 }}>💪</span>
+          <span style={{ fontWeight: 700, fontSize: 18, color: 'var(--primary)' }}>FitTrack</span>
+          <div style={{
+            width: 32, height: 32, borderRadius: '50%',
+            background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 12, fontWeight: 700, color: 'white',
+          }}>{initials}</div>
+        </div>
+
         {page === 'dashboard' && <Dashboard activities={activities} profile={profile} />}
         {page === 'activities' && (
           <ActivityLog
@@ -78,6 +85,20 @@ export default function App() {
         {page === 'bmi' && <BMIPage profile={profile} onUpdateProfile={updateProfile} />}
         {page === 'profile' && <Profile profile={profile} onUpdate={updateProfile} activities={activities} />}
       </main>
+
+      {/* Bottom nav — visible on mobile */}
+      <nav className="bottom-nav">
+        {NAV.map(n => (
+          <button
+            key={n.id}
+            className={`bottom-nav-item ${page === n.id ? 'active' : ''}`}
+            onClick={() => setPage(n.id)}
+          >
+            <span className="bottom-nav-emoji">{n.emoji}</span>
+            <span className="bottom-nav-label">{n.label}</span>
+          </button>
+        ))}
+      </nav>
     </div>
   );
 }
