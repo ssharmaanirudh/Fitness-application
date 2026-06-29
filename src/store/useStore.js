@@ -1,110 +1,65 @@
 import { useState, useEffect } from 'react';
-
-const STORAGE_KEY = 'fitness_app_data';
+import { supabase } from '../lib/supabase';
+import { calcCalories, calcDistance } from '../utils/fitness';
 
 const DEFAULT_PROFILE = {
-  name: 'Alex Johnson',
-  age: 28,
-  gender: 'male',
-  weight: 75,
-  height: 175,
+  name: '',
+  age: 25,
+  gender: 'other',
+  weight: 70,
+  height: 170,
   goal: 'maintain',
 };
 
-const SAMPLE_ACTIVITIES = [
-  {
-    id: '1',
-    type: 'running',
-    date: new Date(Date.now() - 86400000 * 0).toISOString().split('T')[0],
-    duration: 35,
-    calories: 340,
-    distance: 5.83,
-    notes: 'Morning run',
-  },
-  {
-    id: '2',
-    type: 'cycling',
-    date: new Date(Date.now() - 86400000 * 1).toISOString().split('T')[0],
-    duration: 60,
-    calories: 450,
-    distance: 20,
-    notes: 'Afternoon ride',
-  },
-  {
-    id: '3',
-    type: 'walking',
-    date: new Date(Date.now() - 86400000 * 2).toISOString().split('T')[0],
-    duration: 45,
-    calories: 175,
-    distance: 3.75,
-    notes: 'Evening walk',
-  },
-  {
-    id: '4',
-    type: 'swimming',
-    date: new Date(Date.now() - 86400000 * 3).toISOString().split('T')[0],
-    duration: 40,
-    calories: 320,
-    distance: 1.33,
-    notes: '',
-  },
-  {
-    id: '5',
-    type: 'running',
-    date: new Date(Date.now() - 86400000 * 5).toISOString().split('T')[0],
-    duration: 30,
-    calories: 292,
-    distance: 5,
-    notes: 'Track session',
-  },
-  {
-    id: '6',
-    type: 'yoga',
-    date: new Date(Date.now() - 86400000 * 6).toISOString().split('T')[0],
-    duration: 50,
-    calories: 125,
-    distance: 0,
-    notes: 'Morning yoga',
-  },
-];
-
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {/* ignore */}
-  return null;
-}
-
-function saveData(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-export function useStore() {
-  const stored = loadData();
-  const [profile, setProfileState] = useState(stored?.profile || DEFAULT_PROFILE);
-  const [activities, setActivitiesState] = useState(stored?.activities || SAMPLE_ACTIVITIES);
+export function useStore(userId) {
+  const [profile, setProfile] = useState(DEFAULT_PROFILE);
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    saveData({ profile, activities });
-  }, [profile, activities]);
+    if (!userId) return;
+    fetchAll();
+  }, [userId]);
 
-  function updateProfile(updates) {
-    setProfileState(prev => ({ ...prev, ...updates }));
+  async function fetchAll() {
+    setLoading(true);
+    try {
+      const [{ data: prof }, { data: acts }] = await Promise.all([
+        supabase.from('profiles').select('*').eq('id', userId).single(),
+        supabase.from('activities').select('*').eq('user_id', userId).order('date', { ascending: false }),
+      ]);
+      if (prof) setProfile(prof);
+      if (acts) setActivities(acts);
+    } catch (err) {
+      console.error('fetchAll error:', err);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  function addActivity(activity) {
-    const newActivity = {
+  async function updateProfile(updates) {
+    const merged = { ...profile, ...updates, id: userId };
+    setProfile(merged);
+    await supabase.from('profiles').upsert(merged);
+  }
+
+  async function addActivity(activity) {
+    const newAct = {
       ...activity,
-      id: Date.now().toString(),
+      user_id: userId,
+      created_at: new Date().toISOString(),
     };
-    setActivitiesState(prev => [newActivity, ...prev]);
-    return newActivity;
+    const { data, error } = await supabase.from('activities').insert(newAct).select().single();
+    if (!error && data) {
+      setActivities(prev => [data, ...prev]);
+      return data;
+    }
   }
 
-  function deleteActivity(id) {
-    setActivitiesState(prev => prev.filter(a => a.id !== id));
+  async function deleteActivity(id) {
+    setActivities(prev => prev.filter(a => a.id !== id));
+    await supabase.from('activities').delete().eq('id', id).eq('user_id', userId);
   }
 
-  return { profile, updateProfile, activities, addActivity, deleteActivity };
+  return { profile, updateProfile, activities, addActivity, deleteActivity, loading, refetch: fetchAll };
 }
