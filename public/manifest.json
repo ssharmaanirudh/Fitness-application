@@ -1,7 +1,7 @@
 {
-  "name": "FitTrack - Fitness Activity Tracker",
-  "short_name": "FitTrack",
-  "description": "Track your workouts, calories, distance and BMI all in one place.",
+  "name": "Flying Runners - Community Fitness",
+  "short_name": "Flying Runners",
+  "description": "Track workouts, join challenges and compete on the community leaderboard.",
   "start_url": "/Fitness-application/",
   "scope": "/Fitness-application/",
   "display": "standalone",

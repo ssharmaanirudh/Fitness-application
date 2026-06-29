@@ -9,6 +9,7 @@ import BMIPage from './components/BMIPage';
 import Profile from './components/Profile';
 import Challenges from './components/Challenges';
 import CommunityLeaderboard from './components/CommunityLeaderboard';
+import FlyingRunnersLogo from './components/FlyingRunnersLogo';
 import './index.css';
 
 const DASHBOARD_NAV = [
@@ -47,9 +48,9 @@ export default function App() {
 
   if (authLoading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
-        <div style={{ fontSize: 48 }}>💪</div>
-        <div style={{ color: 'var(--text-muted)', fontSize: 16 }}>Loading FitTrack...</div>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 20 }}>
+        <FlyingRunnersLogo size="lg" />
+        <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 8 }}>Loading...</div>
       </div>
     );
   }
@@ -63,8 +64,7 @@ export default function App() {
       {/* Sidebar */}
       <nav className="sidebar">
         <div className="sidebar-logo">
-          <h2>💪 FitTrack</h2>
-          <span>Community Fitness</span>
+          <FlyingRunnersLogo size="sm" />
         </div>
 
         {DASHBOARD_NAV.map(n => (
@@ -102,8 +102,7 @@ export default function App() {
       {/* Main */}
       <main className="main">
         <div className="mobile-topbar">
-          <span style={{ fontSize: 20 }}>💪</span>
-          <span style={{ fontWeight: 700, fontSize: 18, color: 'var(--primary)' }}>FitTrack</span>
+          <FlyingRunnersLogo size="sm" />
           <div style={{
             width: 32, height: 32, borderRadius: '50%',
             background: 'linear-gradient(135deg, var(--primary), var(--secondary))',

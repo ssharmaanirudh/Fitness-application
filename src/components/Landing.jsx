@@ -1,3 +1,5 @@
+import FlyingRunnersLogo from './FlyingRunnersLogo';
+
 export default function Landing({ onNavigate, profile }) {
   const cards = [
     {
@@ -43,9 +45,11 @@ export default function Landing({ onNavigate, profile }) {
         padding: '48px 32px 40px',
         textAlign: 'center',
       }}>
-        <div style={{ fontSize: 52, marginBottom: 12 }}>💪</div>
-        <h1 style={{ fontSize: 38, fontWeight: 800, letterSpacing: -1.5, marginBottom: 8, color: 'var(--text)' }}>
-          Welcome back, {profile?.name?.split(' ')[0] || 'Athlete'}!
+        <div style={{ marginBottom: 20 }}>
+          <FlyingRunnersLogo size="lg" />
+        </div>
+        <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: -1, marginBottom: 8, color: 'var(--text)' }}>
+          Welcome back, {profile?.name?.split(' ')[0] || 'Athlete'}! 👋
         </h1>
         <p style={{ color: 'var(--text-muted)', fontSize: 16, maxWidth: 500, margin: '0 auto' }}>
           Your fitness journey continues. What would you like to do today?
