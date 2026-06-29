@@ -4,11 +4,13 @@ import Dashboard from './components/Dashboard';
 import ActivityLog from './components/ActivityLog';
 import BMIPage from './components/BMIPage';
 import Profile from './components/Profile';
+import Leaderboard from './components/Leaderboard';
 import './index.css';
 
 const NAV = [
   { id: 'dashboard', label: 'Dashboard', emoji: '📊' },
   { id: 'activities', label: 'Activities', emoji: '🏃' },
+  { id: 'leaderboard', label: 'Leaderboard', emoji: '🏆' },
   { id: 'bmi', label: 'BMI', emoji: '⚖️' },
   { id: 'profile', label: 'Profile', emoji: '👤' },
 ];
@@ -82,6 +84,7 @@ export default function App() {
             profile={profile}
           />
         )}
+        {page === 'leaderboard' && <Leaderboard profile={profile} activities={activities} />}
         {page === 'bmi' && <BMIPage profile={profile} onUpdateProfile={updateProfile} />}
         {page === 'profile' && <Profile profile={profile} onUpdate={updateProfile} activities={activities} />}
       </main>
